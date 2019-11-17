@@ -13,14 +13,25 @@ npm install --save use-callback-creator
 ## Usage
 
 ```jsx
-import React, { Component } from 'react'
-
-import { useMyHook } from 'use-callback-creator'
+import React, { useState } from 'react'
+import useCallbackCreator from 'use-callback-creator'
 
 const Example = () => {
-  const example = useMyHook()
+
+  const [counters, setCounter]=useState([0,0,0,0]);
+
+  const handleAdd = useCallbackCreator((index)=>{
+        const newCounters=[...counters];
+        newCounters[index]+=1;
+        setCounters(counters);
+    },[counters]);
+
   return (
-    <div>{example}</div>
+    <div>
+        {counters.map( (count, index)=>
+            <div>{count} <button onClick={handleAdd(index)}>Add</button>
+        )}
+    </div>
   )
 }
 ```
