@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 /**
- * This is intended to add callbacks inside loops.
+ * This is intended to add callbacks dynamically without sending a new function to the children on each render.
  * The returned function creates a new callback each time is called with a different parameter.
  * If the parameter had been already used, the same function is returned.
  * When the inputs change, al functions are renewed to use the new callback.
@@ -24,10 +24,13 @@ const useCallbackCreator = (callback, inputs) => {
     // eslint-disable-next-line
   }, inputs);
 
-  return (id) => {
-    if (!callbacks.current[id]) { callbacks.current[id] = {id, func: (...args) => callback(id, ...args)} }// The id is saved inside the object to preserve its type
+  return React.useCallback((id, ...savedArgs) => {
+    if (!callbacks.current[id]) {
+      callbacks.current[id] = {id, func: (...args) => callback(id, ...savedArgs, ...args)}// The id is saved inside the object to preserve its type
+    }
     return callbacks.current[id].func
-  }
+    // eslint-disable-next-line
+  },inputs);
 }
 
 export default useCallbackCreator
