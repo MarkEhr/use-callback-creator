@@ -19,14 +19,14 @@ const useCallbackCreator = (callback, inputs) => {
 
   React.useMemo(() => {
     for (const id in callbacks.current) {
-      callbacks.current[id].func = (...args) => callback(callbacks.current[id].id, ...args)
+      callbacks.current[id].func = (...args) => callback(callbacks.current[id].id, ...callbacks.current[id].savedArgs, ...args)
     }
     // eslint-disable-next-line
   }, inputs);
 
   return React.useCallback((id, ...savedArgs) => {
     if (!callbacks.current[id]) {
-      callbacks.current[id] = {id, func: (...args) => callback(id, ...savedArgs, ...args)}// The id is saved inside the object to preserve its type
+      callbacks.current[id] = { id, savedArgs, func: (...args) => callback(id, ...savedArgs, ...args) }// The id is saved inside the object to preserve its type
     }
     return callbacks.current[id].func
     // eslint-disable-next-line
