@@ -12,6 +12,9 @@
     "node": ">=8",
     "npm": ">=5"
   },
+  "np": {
+    "contents": "dist"
+  },
   "scripts": {
     "test": "echo 1;",
     "test:watch": "react-scripts test --env=jsdom",
